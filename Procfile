@@ -1,1 +1,1 @@
-web: gunicorn capstone.wsgi:application --bind 0.0.0.0:$PORT --workers 4
+web: uvicorn capstone.asgi:application
