@@ -1,0 +1,141 @@
+{% extends 'chat/base.html' %}
+{% load static %}
+{% block head %}
+<script src="{% static 'chat/index.js' %}" defer>
+</script>
+<script>
+    const roomName = {{ room_name| safe }};
+</script>
+<script>
+    const userID = {{ user.id }};
+</script>
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-lg-12 chat-window">
+            <div class="card chat-app">
+                <div id="plist" class="people-list hidden">
+                    <div class="chat-header clearfix">
+                        <div class="row">
+                            <div class="col">
+                                {% for contact in contacts %}
+                                {% if contact.user == user %}
+                                <div>
+                                    <img src="{{ contact.profile_img }}" alt="avatar">
+                                </div>
+                                <div class="about">
+                                    <div class="name">{{ contact.user }}</div>
+                                    <div class="status"> <i class="fa fa-circle online"></i> online </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled chat-list mt-2 mb-0">
+                        {% for contact in contacts %}
+                        {% if contact.user == user %}
+                        {% else %}
+                        <a href="{% url 'chat' id=contact.id name=user %}">
+                            <li class="clearfix">
+                                <img src="{{ contact.profile_img }}" alt="avatar">
+                                <div class="about">
+                                    <div class="name">{{ contact.user }}</div>
+                                    {% if contact.status == 'active' %}
+                                    <div class="status"> <i class="fa fa-circle online"></i> online </div>
+                                    {% else %}
+                                    <div class="status"> <i class="fa fa-circle offline"></i>
+                                        {{contact.last_login|timesince}}
+                                        ago </div>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+
+                </div>
+                <div class="chat">
+                    <div class="chat-header clearfix">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                                    <img src="{{ get_contact_reciver.profile_img }}" alt="avatar">
+                                </a>
+                                <div class="chat-about">
+                                    <h6 class="m-b-0">{{get_contact_reciver.user}}</h6>
+                                    {% if get_contact_reciver.status == 'active' %}
+                                    <div class="status"> <i class="fa fa-circle online"></i> online </div>
+                                    {% else %}
+                                    <div class="status"> <i class="fa fa-circle offline"></i>
+                                        {{get_contact_reciver.last_login|timesince}}
+                                        ago </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-lg-6 hidden-sm text-end">
+                                <a href="{% url 'index' %}" class="btn btn-outline-secondary"><i
+                                        class="bi bi-house-fill"></i></a>
+                                <a href="{% url 'logout' %}" class="btn btn-outline-primary"><i
+                                        class="bi bi-door-open-fill"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-history">
+                        <ul id="chatbox" class="m-b-0">
+                            <div class="p-2 text-end">
+                                {% if all_posts.has_previous %}
+                                <a id="next-page-link"
+                                    href="{% url 'chat' id=get_contact_reciver.id name=user %}?page={{ all_posts.previous_page_number }}"><i
+                                        class="btn btn-outline-dark bi bi-arrow-left-square"></i></a>
+                                {% endif %}
+                                {% if all_posts.has_next %}
+                                <a id="next-page-link"
+                                    href="{% url 'chat' id=get_contact_reciver.id name=user %}?page={{ all_posts.next_page_number }}"><button
+                                        type="button" class="btn btn-outline-dark"><i
+                                            class="bi bi-arrow-right-square"></i></button></a>
+                                {% endif %}
+                            </div>
+                            {% for post in all_posts %}
+                            {% if post in reciver %}
+                            <li class="clearfix">
+                                <div class="message-data text-end">
+                                    <span class="message-data-time">{{ post.timestamp|timesince }} ago</span>
+                                </div>
+                                <div class="message other-message float-right"> {{ post.body }}</div>
+                            </li>
+                            {% else %}
+                            <li class="clearfix">
+                                <div class="message-data">
+                                    <span class="message-data-time">{{post.timestamp|timesince}}</span>
+                                </div>
+                                <div class="message my-message">{{ post.body }}</div>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+
+
+                        </ul>
+                        <div class="message-data text-end">
+                            <img src="{{ get_contact_reciver.profile_img }}" alt="avatar">
+                        </div>
+                    </div>
+                    <div class="chat-message clearfix">
+                        <div class="form-group input-group">
+                            <span class="input-group-text"><i id="chat-message-submit"
+                                    class="bi bi-send-fill"></i></span>
+                            <input id="chat-message-input" type="text" autofocus class="form-control"
+                                placeholder="Enter text here...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
