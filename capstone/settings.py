@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 ASGI_APPLICATION = "capstone.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [f"redis://default:P4y39FOFdQ47WU0wnv1n@containers-us-west-157.railway.app:6177"],
         },
