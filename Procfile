@@ -1,1 +1,2 @@
-web: uvicorn capstone.asgi:application
+web: daphne capstone.asgi:application
+worker: gunicorn capstone.wsgi:application
