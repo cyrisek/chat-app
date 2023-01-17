@@ -27,7 +27,6 @@ class Post(models.Model):
         return self.author.user.username
 
 
-
 class Chat(models.Model):
     chatters = models.ManyToManyField(
         Contact, blank=True, related_name="chats")
