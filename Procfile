@@ -1,2 +1,1 @@
-web: gunicorn capstone.wsgi --log-file -
-worker: redis-server
+web: gunicorn capstone.wsgi --bind 0.0.0.0:$PORT --worker-class gevent --log-file -
