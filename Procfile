@@ -1,2 +1,2 @@
-web: gunicorn capstone.wsgi:application
-worker: daphne capstone.asgi:application
+web: daphne capstone.asgi:application --port $PORT
+chatworker: python manage.py runworker --settings=capstone.settings
