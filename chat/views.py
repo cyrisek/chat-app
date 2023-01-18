@@ -161,7 +161,7 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("login"))
 
-
+@ csrf_exempt
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
