@@ -1,2 +1,2 @@
-web: gunicorn capstone.wsgi:application
-chatworker: daphne capstone.asgi:application --port $PORT
+web: daphne capstone.asgi:application --port $PORT
+chatworker: gunicorn capstone.wsgi:application
