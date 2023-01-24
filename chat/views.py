@@ -65,7 +65,7 @@ def chat(request, id, name):
         room_name = f"{chats2[0]}"
         print(room_name)
         # pagination
-        paginator = Paginator(all_posts, 20)
+        paginator = Paginator(all_posts.order_by('timestamp'), 20)
         last_page = paginator.page_range.stop
         page = request.GET.get('page')
         if page is not None:
@@ -160,6 +160,7 @@ def logout_view(request):
     contact.save()
     logout(request)
     return HttpResponseRedirect(reverse("login"))
+
 
 @ csrf_exempt
 def register(request):
