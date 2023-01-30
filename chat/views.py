@@ -11,6 +11,7 @@ from rest_framework import mixins
 from rest_framework import generics
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
+from django.db.models.functions import Lower
 
 User = get_user_model()
 
@@ -18,8 +19,7 @@ User = get_user_model()
 def index(request):
     # Check for user authentication, if not send to login menu
     if request.user.is_authenticated:
-        contacts = Contact.objects.all()
-
+        contacts = Contact.objects.all().order_by(Lower('user__username'))
         context = {"contacts": contacts}
         return render(request, "chat/index.html", context)
     else:
@@ -28,7 +28,7 @@ def index(request):
 
 def chat(request, id, name):
     user = request.user
-    contacts = Contact.objects.all()
+    contacts = Contact.objects.all().order_by(Lower('user__username'))
     print(id, user)
     # get contacts ID
     get_contact_reciver = contacts.get(id=id)
@@ -172,6 +172,10 @@ def register(request):
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
+        if not all([username, email, password, confirmation]):
+            return render(request, "chat/register.html", {
+                "message": "All fields are required."
+            })
         if password != confirmation:
             return render(request, "chat/register.html", {
                 "message": "Passwords must match."
