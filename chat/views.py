@@ -23,7 +23,8 @@ def index(request):
         context = {"contacts": contacts}
         return render(request, "chat/index.html", context)
     else:
-        return HttpResponseRedirect(reverse("login"))
+        login_url = reverse('login')
+        return HttpResponseRedirect(login_url)
 
 
 def chat(request, id, name):
@@ -74,7 +75,7 @@ def chat(request, id, name):
         else:
             all_posts = paginator.get_page(last_page)
             pass
-        return render(request, "chat/chat.html", {
+        return render(request, 'chat/chat.html', {
             "room_name": room_name,
             "user": user,
             "contacts": contacts,
@@ -84,11 +85,10 @@ def chat(request, id, name):
             "reciver": reciver,
             "get_contact_reciver": get_contact_reciver
         })
-
     except:
         room_name = chats2
         print(room_name)
-        return render(request, "chat/chat.html", {
+        return render(request, 'chat/chat.html', {
             "room_name": room_name,
             "user": user,
             "contacts": contacts,
